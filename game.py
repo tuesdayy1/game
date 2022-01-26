@@ -170,7 +170,7 @@ class BulletUsually(pygame.sprite.Sprite):
         super().__init__(*group)
         self.image = pygame.transform.scale(load_image('Shoot1.png'), (15, 15))
         self.rect = self.image.get_rect()
-        self.rect.x = player.rect.x
+        self.rect.x = player.rect.x + 20
         self.rect.y = player.rect.y
 
     def update(self):
@@ -312,6 +312,10 @@ class MainMenu:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     terminate()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.MOUSEBUTTONDOWN:
+                        self.start_screen(stars)
+            screen.fill((0, 0, 0))
             pygame.display.flip()
 
 
@@ -349,6 +353,7 @@ meteors = []
 meteors2 = []
 meteor_born = 0
 points = 0
+value = 1
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -356,7 +361,9 @@ while True:
     if meteor_born == 0:
         meteors.append(Meteor1(random.randrange(1, 400),
                                (random.randrange(1, 400), random.randrange(1, 400))))
-    meteor_born = 0 if meteor_born == 25 else meteor_born + 1
+    if points > 50:
+        value = 2
+    meteor_born = 0 if meteor_born == 50 else meteor_born + value
     screen.fill((0, 0, 0))
     for i in stars:
         screen.fill(i[0], i[1])
@@ -373,6 +380,10 @@ while True:
         i.update()
     render_points()
     player.health_points()
+    if player.hp <= 0:
+        menu.end_screen()
+    elif planet.hp <= 0:
+        menu.end_screen()
     planet_group.draw(screen)
     planet.health_points()
     pygame.display.set_caption(f'{clock.get_fps()}')
