@@ -133,6 +133,7 @@ class Player(pygame.sprite.Sprite):
 
     def shooting(self):
         b = BulletUsually()
+        bullet_sound.play()
         self.bullets_group.add(b)
         self.bullets.append(b)
         # self.bullets_group.remove(self.bullets[0])        # Если столкнулся с метеоритом
@@ -219,12 +220,14 @@ class Meteor1(pygame.sprite.Sprite):
             planet.hp -= 10
             meteors.remove(self)
             meteors2.remove(self)
+            meteor_sound.play()
         elif pygame.sprite.collide_mask(self, player):
             player.hp -= 12
             meteors.remove(self)
             meteors2.remove(self)
             points += 1
             print(points)
+            meteor_sound.play()
         elif pygame.sprite.spritecollideany(self, player.bullets_group):
             self.hp -= 2.5
             for i in player.bullets_group:
@@ -237,6 +240,7 @@ class Meteor1(pygame.sprite.Sprite):
                 meteors2.remove(self)
                 points += 1
                 print(points)
+                meteor_sound.play()
         elif self.y > 650:
             meteors.remove(self)
             meteors2.remove(self)
@@ -320,6 +324,7 @@ class MainMenu:
 
 
 pygame.init()
+pygame.mixer.init()
 size = height, width = 400, 600
 screen = pygame.display.set_mode(size)
 fps = 60
@@ -346,6 +351,11 @@ Border(3, width - 3, height - 3, width - 3)
 Border(3, 3, 3, width - 3)
 Border(height - 3, 3, height - 3, width - 3)
 meteors = []
+
+meteor_sound = pygame.mixer.Sound('data/boom.mp3')
+meteor_sound.set_volume(0.1)
+bullet_sound = pygame.mixer.Sound('data/laser.mp3')
+bullet_sound.set_volume(0.01)
 # for _ in range(10):
 #     meteors.append(Meteor1(
 #         random.randrange(1, 400),
